@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "5887a734-4002-4387-add6-772d0d6a293d"
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -18,17 +21,38 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "angular-miniprogram:browser",
           "options": {
+            "pages": [
+              {
+                "glob": "**/*.entry.ts",
+                "input": "./src/pages",
+                "output": "pages"
+              }
+            ],
+            "platform": "wx",
             "outputPath": "dist/angular-miniprogram-template",
-            "index": "src/index.html",
+            "index": "",
             "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": "",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              {
+                "glob": "project.config.json",
+                "input": "./src",
+                "output": "./"
+              },
+              {
+                "glob": "app.json",
+                "input": "./src",
+                "output": "./"
+              },
+              {
+                "glob": "**/*.entry.json",
+                "input": "./src",
+                "output": "./"
+              }
             ],
             "styles": [
               "src/styles.scss"
@@ -66,7 +90,7 @@
               "namedChunks": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

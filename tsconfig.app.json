@@ -3,11 +3,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "strict": false,
+    "skipLibCheck": true
   },
   "files": [
     "src/main.ts",
-    "src/polyfills.ts"
+    "src/pages/page1/page1.entry.ts"
   ],
   "include": [
     "src/**/*.d.ts"

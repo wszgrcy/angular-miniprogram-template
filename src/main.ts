@@ -1,12 +1,12 @@
 import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
-import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-
+import { platformWeixinMiniProgram } from 'angular-miniprogram';
+import 'zone.js';
+import { MainModule } from './main.module';
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+platformWeixinMiniProgram()
+  .bootstrapModule(MainModule)
+  .catch((err) => console.error(err));
