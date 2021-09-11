@@ -7,4 +7,5 @@
 
 ## 构建
 
-- `yarn build`
+- `yarn build` 开发环境
+- `yarn build:prod` 生产环境

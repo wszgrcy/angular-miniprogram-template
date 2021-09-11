@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng build --watch",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
     "test": "ng test"
   },
   "private": true,
@@ -17,7 +18,7 @@
     "@angular/platform-browser": "~12.0.3",
     "@angular/platform-browser-dynamic": "~12.0.3",
     "@angular/router": "~12.0.3",
-    "angular-miniprogram": "~0.0.2",
+    "angular-miniprogram": "~0.0.3",
     "miniprogram-api-typings": "^3.4.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
