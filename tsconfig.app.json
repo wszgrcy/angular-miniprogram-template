@@ -9,7 +9,7 @@
   },
   "files": [
     "src/main.ts",
-    "src/pages/page1/page1.entry.ts"
+    "src/pages/**/*.entry.ts"
   ],
   "include": [
     "src/**/*.d.ts"
