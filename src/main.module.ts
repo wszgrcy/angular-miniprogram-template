@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { DoBootstrap } from '@angular/core';
-import { WeixinMiniProgramModule } from 'angular-miniprogram';
+import { MiniProgramModule } from 'angular-miniprogram';
 @NgModule({
   declarations: [],
-  imports: [WeixinMiniProgramModule],
+  imports: [MiniProgramModule],
   exports: [],
   providers: [],
 })
