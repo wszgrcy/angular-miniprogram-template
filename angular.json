@@ -47,11 +47,6 @@
                 "glob": "app.json",
                 "input": "./src",
                 "output": "./"
-              },
-              {
-                "glob": "**/*.entry.json",
-                "input": "./src",
-                "output": "./"
               }
             ],
             "styles": [
@@ -128,6 +123,29 @@
             ],
             "scripts": []
           }
+        }
+      }
+    },
+    "first": {
+      "projectType": "library",
+      "root": "projects/first",
+      "sourceRoot": "projects/first/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "angular-miniprogram:library",
+          "options": {
+            "project": "projects/first/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/first/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/first/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
