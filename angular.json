@@ -57,6 +57,7 @@
           "configurations": {
             "production": {
               "vendorChunk": true,
+              "extractLicenses": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -75,7 +76,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "none"
             },
             "development": {
               "buildOptimizer": false,
