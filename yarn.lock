@@ -153,13 +153,6 @@
     symbol-observable "4.0.0"
     uuid "8.3.2"
 
-"@angular/common@13.0.2":
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-13.0.2.tgz#794cea4e1e626012e69ca5fc6ddb78d613b8004f"
-  integrity sha512-UxWzNAU/o9pP02AYB5MrnIlShirfO631NolmvP0jTSEmym1nAeDOwZIYlkgfcJMHFXFc7DBnE2XOGaTZ8if3kw==
-  dependencies:
-    tslib "^2.3.0"
-
 "@angular/compiler-cli@13.0.2":
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-13.0.2.tgz#36757ecb6c7ea63a7a053791737ff39e11b4e45d"
@@ -195,13 +188,6 @@
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-13.0.2.tgz#786bb1242d69e8b7a2cbae224448c27e2f1fc064"
   integrity sha512-6Jbct50lncMqzwLILzfmwQRK8eOEMv0quCL3pQptEpYPSlPqKz6QRxD76BykSUOs7XYJ/KdZmu3uGcT2Q/DUVg==
-  dependencies:
-    tslib "^2.3.0"
-
-"@angular/forms@13.0.2":
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-13.0.2.tgz#c4779636639b9a3c7166b223f3d5c39149b7c72d"
-  integrity sha512-JGgEOTH/OYr7/RlqJUPSzKQF/a55UM5PD6CgpUjAXKrCV18+zhofO05g+ibIZH3OfONntthcbKEXxMTX2EEQqg==
   dependencies:
     tslib "^2.3.0"
 
@@ -1942,10 +1928,10 @@ ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-angular-miniprogram@0.1.0-alpha.2:
-  version "0.1.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/angular-miniprogram/-/angular-miniprogram-0.1.0-alpha.2.tgz#91698c3ea0d3b43f948901c8af8c94924c13246b"
-  integrity sha512-qxC0LS/SAUeEXDKPSQS2GzduixP2UC1d8XmOeyM2B9+/q6WNZvk3YcpgiVHBeiIL4H8RkRXxB7tX7NsMOtMQQg==
+angular-miniprogram@0.1.0-alpha.3:
+  version "0.1.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/angular-miniprogram/-/angular-miniprogram-0.1.0-alpha.3.tgz#8189ba69dd1b8bb23e6e7253f68a161f12b1ca29"
+  integrity sha512-/R2pPit9TtlckCDCQqpTv3Hx5d5heba9aT9yNlCWY5MJdHJzcnq8FCbh1iLZKT+WqJdJXtrScUOHj+cdaY96wQ==
   dependencies:
     cyia-code-util "1.3.7"
     static-injector "1.0.9"
