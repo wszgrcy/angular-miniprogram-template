@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": "5887a734-4002-4387-add6-772d0d6a293d"
+    "analytics": "5887a734-4002-4387-add6-772d0d6a293d",
+    "cache": {
+      "enabled": false
+    }
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -21,7 +24,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "angular-miniprogram:browser",
+          "builder": "angular-miniprogram:application",
           "options": {
             "pages": [
               {
