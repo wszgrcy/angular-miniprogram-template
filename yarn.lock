@@ -1928,10 +1928,10 @@ ajv@^8.8.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-angular-miniprogram@1.0.0-alpha.0:
-  version "1.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/angular-miniprogram/-/angular-miniprogram-1.0.0-alpha.0.tgz#1b761b9d66d7a64af984618b70ad401790fecdeb"
-  integrity sha512-lg+mc4Oz7mdicRmZUingQ+O6gSCBEOy9rpEJPwsDqfGk94U647oi0DujM5W855VN3EoSrnqviOlPkznbXRBqRQ==
+angular-miniprogram@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/angular-miniprogram/-/angular-miniprogram-1.0.0.tgz#12052247134de428ba20ba4e94070582f00ff044"
+  integrity sha512-jTY9JlGCUiTHuODu5Ey59ZR6QKzToeZJHMryag1NF/GjJAunUSFqLw2bTgkNYif3gKZOlSaJO7WTpv5acOVhUA==
   dependencies:
     cyia-code-util "1.3.7"
     static-injector "1.0.9"
