@@ -5,12 +5,14 @@
     "outDir": "../../out-tsc/spec",
     "types": [
       "jasmine"
-    ]
+    ],
+    "skipLibCheck": true
   },
   "files": [
-    "src/test.ts"
+    "src/test.ts",
   ],
   "include": [
+    "**/*.entry.ts",
     "**/*.spec.ts",
     "**/*.d.ts"
   ]

@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/first/first-test-component-entry"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Weixin",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2"
+}

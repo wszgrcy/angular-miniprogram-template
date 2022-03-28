@@ -149,6 +149,41 @@
             }
           },
           "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "angular-miniprogram:karma",
+          "options": {
+            "main": "./projects/first/src/test.ts",
+            "platform": "wx",
+            "pages": [
+              {
+                "glob": "**/*.entry.ts",
+                "input": "./projects/first/src/spec",
+                "output": "pages"
+              }
+            ],
+            "components": [
+              {
+                "glob": "**/*.entry.ts",
+                "input": "./projects/first/src/lib",
+                "output": "components"
+              }
+            ],
+            "assets": [
+              {
+                "glob": "project.config.json",
+                "input": "./src",
+                "output": "./"
+              },
+              {
+                "glob": "app.json",
+                "input": "./projects/first",
+                "output": "./"
+              }
+            ],
+            "tsConfig": "projects/first/tsconfig.spec.json",
+            "karmaConfig": "projects/first/karma.conf.js"
+          }
         }
       }
     }
