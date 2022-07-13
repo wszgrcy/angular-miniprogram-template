@@ -14,7 +14,7 @@
     "@angular/animations": "14.0.5",
     "@angular/compiler": "14.0.5",
     "@angular/core": "14.0.5",
-    "angular-miniprogram": "1.2.0-alpha.1",
+    "angular-miniprogram": "1.2.1",
     "miniprogram-api-typings": "^3.4.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
