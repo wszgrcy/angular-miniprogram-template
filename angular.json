@@ -33,6 +33,13 @@
                 "output": "pages"
               }
             ],
+            "components": [
+              {
+                "glob": "**/*.entry.ts",
+                "input": "./src/components",
+                "output": "components"
+              }
+            ],
             "platform": "wx",
             "outputPath": "dist/angular-miniprogram-template",
             "index": "",

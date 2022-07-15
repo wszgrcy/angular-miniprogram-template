@@ -12,6 +12,7 @@
   ],
   "include": [
     "src/pages/**/*.entry.ts",
+    "src/components/**/*.entry.ts",
     "src/**/*.d.ts"
   ]
 }
