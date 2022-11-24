@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import {
+  APP_TOKEN,
+  PAGE_TOKEN,
+} from 'angular-miniprogram';
 
 @Component({
   selector: 'app-component1',
@@ -6,7 +10,10 @@ import { Component, OnInit } from '@angular/core';
   standalone: true,
 })
 export class Component1Component implements OnInit {
-  constructor() {}
+  constructor(
+    @Inject(APP_TOKEN) appInstance: any,
+    @Inject(PAGE_TOKEN) pageInstance: any
+  ) {}
 
   ngOnInit() {}
 }
