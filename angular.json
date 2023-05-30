@@ -194,6 +194,5 @@
         }
       }
     }
-  },
-  "defaultProject": "angular-miniprogram-template"
+  }
 }
