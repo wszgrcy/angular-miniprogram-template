@@ -8,7 +8,7 @@
     "skipLibCheck": true
   },
   "files": [
-    "src/main.ts",
+    "src/main.ts"
   ],
   "include": [
     "src/pages/**/*.entry.ts",

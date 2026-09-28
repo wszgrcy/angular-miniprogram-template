@@ -97,42 +97,6 @@
             }
           },
           "defaultConfiguration": "development"
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "browserTarget": "angular-miniprogram-template:build:production"
-            },
-            "development": {
-              "browserTarget": "angular-miniprogram-template:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "angular-miniprogram-template:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "scripts": []
-          }
         }
       }
     },
@@ -161,6 +125,7 @@
           "builder": "angular-miniprogram:karma",
           "options": {
             "main": "./projects/first/src/test.ts",
+            "outputPath": "dist/karma/first",
             "platform": "wx",
             "pages": [
               {

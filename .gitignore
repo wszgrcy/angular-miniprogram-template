@@ -4,6 +4,8 @@
 /dist
 /tmp
 /out-tsc
+# karma builder 写在 tsconfig 旁边的派生配置（typeRoots 钉死用），别提交
+**/.tsconfig.generated-*.json
 # Only exists if Bazel was run
 /bazel-out
 
