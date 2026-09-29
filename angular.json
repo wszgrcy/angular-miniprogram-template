@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "$schema": "./node_modules/angular-miniprogram/lib/config/schema.json",
   "cli": {
     "analytics": "5887a734-4002-4387-add6-772d0d6a293d",
     "cache": {
@@ -59,9 +59,7 @@
                 "output": "./"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": []
           },
           "configurations": {
