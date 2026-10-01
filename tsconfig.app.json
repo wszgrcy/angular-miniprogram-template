@@ -3,16 +3,16 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": [],
+    "types": ["miniprogram-api-typings"],
     "strict": false,
     "skipLibCheck": true
   },
-  "files": [
-    "src/main.ts"
-  ],
+  "files": ["src/main.ts"],
   "include": [
     "src/pages/**/*.entry.ts",
+    "src/packageA/**/*.entry.ts",
     "src/components/**/*.entry.ts",
+    "src/custom-tab-bar/index.ts",
     "src/**/*.d.ts"
   ]
 }

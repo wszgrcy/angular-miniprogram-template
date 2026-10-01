@@ -31,6 +31,11 @@
                 "glob": "**/*.entry.ts",
                 "input": "./src/pages",
                 "output": "pages"
+              },
+              {
+                "glob": "**/*.entry.ts",
+                "input": "./src/packageA",
+                "output": "packageA"
               }
             ],
             "components": [
@@ -38,6 +43,11 @@
                 "glob": "**/*.entry.ts",
                 "input": "./src/components",
                 "output": "components"
+              },
+              {
+                "glob": "index.ts",
+                "input": "./src/custom-tab-bar",
+                "output": "custom-tab-bar"
               }
             ],
             "platform": "wx",
@@ -52,15 +62,13 @@
                 "glob": "project.config.json",
                 "input": "./src",
                 "output": "./"
-              },
-              {
-                "glob": "app.json",
-                "input": "./src",
-                "output": "./"
               }
             ],
-            "styles": ["src/styles.scss"],
-            "scripts": []
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": [],
+            "appJson": "src/app.config.json"
           },
           "configurations": {
             "production": {
@@ -136,6 +144,11 @@
               {
                 "glob": "**/*.entry.ts",
                 "input": "./projects/first/src/lib",
+                "output": "components"
+              },
+              {
+                "glob": "**/*.entry.ts",
+                "input": "./projects/first/secondary",
                 "output": "components"
               }
             ],

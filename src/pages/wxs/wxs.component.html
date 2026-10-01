@@ -1,0 +1,34 @@
+<wxs module="fmt" src="./format.wxs"></wxs>
+
+<div class="page">
+  <h1 class="page__title">WXS 渲染层脚本</h1>
+  <p class="page__hint">
+    {{ fmt.MSG }}
+  </p>
+
+  <div class="card">
+    <p class="card__label">成员与函数调用</p>
+    <p class="wxs-row">常量 CURRENCY = {{ fmt.CURRENCY }}</p>
+    <p class="wxs-row">money(price) = {{ fmt.money(price()) }}</p>
+    <p class="wxs-row">thousands(big) = {{ fmt.thousands(big()) }}</p>
+    <p class="wxs-row">pad(3) = {{ fmt.pad(3) }} / pad(11) = {{ fmt.pad(11) }}</p>
+    <p class="wxs-row">truncate(long, 10) = {{ fmt.truncate(long(), 10) }}</p>
+  </div>
+
+  <div class="card">
+    <p class="card__label">结果参与运算 / 三元</p>
+    <p class="wxs-row">{{ fmt.money(price()) + ' 元' }}</p>
+    <p class="wxs-row">{{ on() ? fmt.money(price()) : '—' }}</p>
+    <p class="wxs-row">{{ fmt.money(price()) + fmt.money(9.9) }}</p>
+  </div>
+
+  <div class="card">
+    <p class="card__label">class 下推（计算留在渲染层）</p>
+    <button class="btn" (tap)="toggle()">
+      切换 on（当前 {{ on() }}）
+    </button>
+    <div [class]="fmt.cls('wxs-box', on())">
+      这个盒子的 class 由 wxs 算出来：{{ fmt.cls('wxs-box', on()) }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 110rpx;
+  display: flex;
+  background: #ffffff;
+  border-top: 1rpx solid #e5e5e5;
+  padding-bottom: env(safe-area-inset-bottom);
+
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &--on {
+      .tabbar__text {
+        color: #1aad19;
+        font-weight: bold;
+      }
+    }
+  }
+
+  &__icon {
+    font-size: 36rpx;
+    line-height: 44rpx;
+  }
+
+  &__text {
+    font-size: 20rpx;
+    color: #888888;
+  }
+}

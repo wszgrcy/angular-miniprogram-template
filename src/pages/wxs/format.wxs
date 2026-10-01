@@ -1,0 +1,71 @@
+/**
+ * wxs 模块（渲染层脚本）。
+ *
+ * wxs 是一门被裁剪过的 ES5 方言，运行在**渲染层**：
+ *   - 逻辑层 → 渲染层：编译期把绑定下推，零 setData
+ *   - 渲染层 → 逻辑层：只有 ownerInstance.callMethod（异步）
+ *
+ * 禁用语法（编译期直接拦）：async / await / class / try-catch / import / 模板字符串插值。
+ * 对外成员必须写在 module.exports 里，模板才能 `fmt.xxx` 取到。
+ */
+
+var CURRENCY = '¥';
+
+var MSG = 'wxs 常量，直接渲染层取值，不经过逻辑层';
+
+/** 金额格式化：1234.5 → ¥1234.50 */
+function money(v) {
+  if (v === null || v === undefined || v === '') {
+    return '--';
+  }
+  var n = parseFloat(v);
+  if (isNaN(n)) {
+    return '--';
+  }
+  return CURRENCY + n.toFixed(2);
+}
+
+/** 千分位：1234567 → 1,234,567 */
+function thousands(v) {
+  var s = '' + Math.floor(Math.abs(v));
+  var out = '';
+  var count = 0;
+  for (var i = s.length - 1; i >= 0; i--) {
+    out = s.charAt(i) + out;
+    count++;
+    if (count % 3 === 0 && i !== 0) {
+      out = ',' + out;
+    }
+  }
+  return (v < 0 ? '-' : '') + out;
+}
+
+/** 补零：7 → 07 */
+function pad(n) {
+  var s = '' + n;
+  return s.length < 2 ? '0' + s : s;
+}
+
+/** 截断 + 省略号 */
+function truncate(s, max) {
+  if (s === null || s === undefined) {
+    return '';
+  }
+  var str = '' + s;
+  return str.length > max ? str.substring(0, max) + '…' : str;
+}
+
+/** class 下推：返回一个 class 名，整个计算留在渲染层 */
+function cls(base, on) {
+  return on ? base + ' ' + base + '--on' : base;
+}
+
+module.exports = {
+  CURRENCY: CURRENCY,
+  MSG: MSG,
+  money: money,
+  thousands: thousands,
+  pad: pad,
+  truncate: truncate,
+  cls: cls,
+};

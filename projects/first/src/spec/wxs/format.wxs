@@ -1,0 +1,76 @@
+/**
+ * wxs 模块（渲染层脚本）。
+ *
+ * wxs 是一门被裁剪过的 ES5 方言，运行在**渲染层**，逻辑层实例上读不到
+ * 它的求值结果 —— 所以 spec 只能从 setData 出去的节点树里断言文本。
+ *
+ * 注意 wxs 里没有 `String` 这类全局构造器，转字符串只能用 `'' + x`。
+ */
+
+var CURRENCY = '¥';
+
+var MSG = 'wxs 常量，直接渲染层取值，不经过逻辑层';
+
+function money(v) {
+  if (v === null || v === undefined || v === '') {
+    return '--';
+  }
+  var n = parseFloat(v);
+  if (isNaN(n)) {
+    return '--';
+  }
+  return CURRENCY + n.toFixed(2);
+}
+
+function thousands(v) {
+  var s = '' + Math.floor(Math.abs(v));
+  var out = '';
+  var count = 0;
+  for (var i = s.length - 1; i >= 0; i--) {
+    out = s.charAt(i) + out;
+    count++;
+    if (count % 3 === 0 && i !== 0) {
+      out = ',' + out;
+    }
+  }
+  return (v < 0 ? '-' : '') + out;
+}
+
+function pad(n) {
+  var s = '' + n;
+  return s.length < 2 ? '0' + s : s;
+}
+
+function truncate(s, max) {
+  if (s === null || s === undefined) {
+    return '';
+  }
+  var str = '' + s;
+  return str.length > max ? str.substring(0, max) + '…' : str;
+}
+
+function cls(base, on) {
+  return on ? base + ' ' + base + '--on' : base;
+}
+
+/** 把 pad 的结果折进 class：pad 走 `'' + n`，wxs 里没有 String */
+function badge(n) {
+  return 'num-' + pad(n);
+}
+
+/** money + toFixed + replace 的结果折进 class：¥1234.50 -> p-1234_50 */
+function priceClass(v) {
+  return 'p-' + money(v).replace(CURRENCY, '').replace('.', '_');
+}
+
+module.exports = {
+  CURRENCY: CURRENCY,
+  MSG: MSG,
+  money: money,
+  thousands: thousands,
+  pad: pad,
+  truncate: truncate,
+  cls: cls,
+  badge: badge,
+  priceClass: priceClass,
+};

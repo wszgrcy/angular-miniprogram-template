@@ -1,0 +1,31 @@
+<wxs module="fmt" src="./format.wxs"></wxs>
+
+<p class="wxs-msg">{{ fmt.MSG }}</p>
+<p class="wxs-currency">CURRENCY={{ fmt.CURRENCY }}</p>
+<p class="wxs-money">money={{ fmt.money(price()) }}</p>
+<p class="wxs-thousands">thousands={{ fmt.thousands(big()) }}</p>
+<p class="wxs-pad">pad={{ fmt.pad(3) }}/{{ fmt.pad(11) }}</p>
+<p class="wxs-truncate">{{ fmt.truncate(long(), 10) }}</p>
+
+<p class="wxs-concat">{{ fmt.money(price()) + ' 元' }}</p>
+<p class="wxs-both">{{ fmt.money(price()) + fmt.money(9.9) }}</p>
+<p class="wxs-ternary">{{ on() ? fmt.money(price()) : '—' }}</p>
+
+<button id="wxs-toggle" class="wxs-btn" (tap)="toggle()">
+  切换 on（当前 {{ on() }}）
+</button>
+
+<!--
+  入参全是字面量：wxml 里不含 nodeList 引用，渲染层直接算，这条路成立。
+  badge / priceClass 都走 `'' + x`（wxs 没有 String 全局构造器），
+  class 由渲染层算完落到节点上，select 查得到 —— wxs 模块真加载跑通了，
+  看它最准。
+-->
+<div [class]="fmt.badge(3)">badge</div>
+<div [class]="fmt.priceClass(1234.5)">priceClass</div>
+
+<!--
+  property 绑定下推：`[bar]="fmt.pad(dyn())"` 经改写层变成 `[bar]="[dyn()]"`，
+  setProperty 直接赋值，枝叶数组原样落到 property.bar。这条路是通的。
+-->
+<div class="wxs-dyn" [bar]="fmt.pad(dyn())">dyn</div>

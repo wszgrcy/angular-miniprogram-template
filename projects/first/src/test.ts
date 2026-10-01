@@ -28,7 +28,11 @@ describe('describe1', () => {
   });
 });
 
-bootstrapApplication().catch((e) => console.error(e));
+bootstrapApplication().catch((e) => {
+  // karma 的 progress reporter 不透传 console，把错误挂到 wx 上让 spec 能断出来
+  (wx as any).__bootstrapError = String(e?.stack ?? e);
+  console.error(e);
+});
 
 // Then we find all the tests.
 const context = (require as any).context('./', true, /\.spec\.ts$/);

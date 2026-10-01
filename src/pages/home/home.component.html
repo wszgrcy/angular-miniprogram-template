@@ -1,0 +1,73 @@
+<div class="page">
+  <h1 class="page__title">{{ title() }}</h1>
+  <p class="page__hint">
+    本页演示 Angular 内置控制流（&#64;if / &#64;for / &#64;switch）与 signal
+    状态。
+  </p>
+
+  <div class="card">
+    <p class="card__label">signal 计数</p>
+    <p class="card__big">{{ count() }} · 双倍 {{ doubled() }}</p>
+    <button class="btn btn--primary" (tap)="inc()">+1</button>
+    <button class="btn" (tap)="reset()">归零</button>
+  </div>
+
+  <div class="card">
+    <p class="card__label">&#64;if / &#64;else</p>
+    <button class="btn" (tap)="togglePanel()">
+      切换面板（当前 {{ showPanel() ? "开" : "关" }}）
+    </button>
+
+    @if (count() > 5) {
+      <p class="tip tip--warn">count 已经大于 5 了</p>
+    } @else if (count() > 0) {
+      <p class="tip">count 在 1~5 之间</p>
+    } @else {
+      <p class="tip tip--muted">count 还是 0</p>
+    }
+
+    @if (showPanel()) {
+      <div class="panel">面板开着</div>
+    } @else {
+      <div class="panel panel--off">面板关着</div>
+    }
+  </div>
+
+  <div class="card">
+    <p class="card__label">&#64;for + 过滤</p>
+    <input
+      class="input"
+      placeholder="输入关键字过滤（如 signal）"
+      [(ngModel)]="keyword"
+    />
+    <p class="card__sub">命中 {{ filtered().length }} 条</p>
+
+    @for (item of filtered(); track item.id; let i = $index) {
+      <div class="row">
+        <span class="row__idx">{{ i + 1 }}</span>
+        <span class="row__name">{{ item.name }}</span>
+        <span class="row__desc">{{ item.desc }}</span>
+      </div>
+    } @empty {
+      <div class="empty">没有匹配项</div>
+    }
+  </div>
+
+  <div class="card">
+    <p class="card__label">&#64;switch</p>
+    <button class="btn" (tap)="cycleMode()">
+      切换模式（当前 {{ mode() }}）
+    </button>
+    @switch (mode()) {
+      @case ("list") {
+        <div class="panel">列表模式</div>
+      }
+      @case ("grid") {
+        <div class="panel">网格模式</div>
+      }
+      @default {
+        <div class="panel panel--off">不展示</div>
+      }
+    }
+  </div>
+</div>

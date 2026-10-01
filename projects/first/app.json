@@ -1,7 +1,25 @@
 {
   "pages": [
-    "pages/first/first-test-component-entry"
+    "pages/first/first-test-component-entry",
+    "pages/tabbar/tab-second-entry",
+    "pages/wxs/wxs-test-entry",
+    "pages/wxs-inline/wxs-inline-entry"
   ],
+  "tabBar": {
+    "color": "#888888",
+    "selectedColor": "#1aad19",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/first/first-test-component-entry",
+        "text": "A"
+      },
+      {
+        "pagePath": "pages/tabbar/tab-second-entry",
+        "text": "B"
+      }
+    ]
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

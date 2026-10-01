@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/home/home-entry",
+    "pages/library/library-entry",
+    "pages/wxs/wxs-entry",
+    "pages/subpkg/subpkg-entry"
+  ],
+  "entryPagePath": "pages/home/home-entry",
+  "subpackages": [
+    {
+      "root": "packageA",
+      "pages": ["pages/goods/goods-entry", "pages/order/order-entry"]
+    }
+  ],
+  "preloadRule": {
+    "pages/subpkg/subpkg-entry": {
+      "packages": ["packageA"]
+    }
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#888888",
+    "selectedColor": "#1aad19",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/home/home-entry", "text": "首页" },
+      { "pagePath": "pages/library/library-entry", "text": "组件库" },
+      { "pagePath": "pages/wxs/wxs-entry", "text": "WXS" },
+      { "pagePath": "pages/subpkg/subpkg-entry", "text": "分包" }
+    ]
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "angular-miniprogram 模板",
+    "navigationBarTextStyle": "black"
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2"
+}

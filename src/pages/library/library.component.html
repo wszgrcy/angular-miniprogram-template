@@ -1,0 +1,33 @@
+<div class="page">
+  <h1 class="page__title">组件库出口 demo</h1>
+  <p class="page__hint">
+    同一个库 first 的两个 entry point：一级出口 <code>first</code>、二级出口
+    <code>first/secondary</code>。它们是两份独立产物，但用法完全一样。
+  </p>
+
+  <div class="card">
+    <p class="card__label">
+      一级出口：import &#123; ... &#125; from 'first'
+    </p>
+    <lib-first [title]="title()" (changed)="onChanged($event)"></lib-first>
+    <p class="card__sub">父组件收到 → {{ lastChanged() }}</p>
+    <button class="btn" (tap)="touchFirst()">
+      调用一级服务（{{ firstService.tag }}）
+    </button>
+    <p class="card__sub">一级服务 hits = {{ firstService.hits() }}</p>
+  </div>
+
+  <div class="card">
+    <p class="card__label">
+      二级出口：import &#123; ... &#125; from 'first/secondary'
+    </p>
+    <lib-secondary-panel
+      [price]="price()"
+      (touched)="onTouched($event)"
+    ></lib-secondary-panel>
+    <p class="card__sub">父组件收到 → {{ lastTouched() }}</p>
+    <button class="btn" (tap)="bumpPrice()">
+      父组件把 price +50（当前 {{ price() }}）
+    </button>
+  </div>
+</div>

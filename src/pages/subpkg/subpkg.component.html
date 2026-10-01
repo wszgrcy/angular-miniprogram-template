@@ -1,0 +1,26 @@
+<div class="page">
+  <h1 class="page__title">分包 demo</h1>
+  <p class="page__hint">
+    分包配置写在 <code>src/app.config.json</code> 的
+    <code>subpackages</code> 里；约定「分包 root 同时是源码目录与产物目录」，
+    即 <code>src/packageA/**</code> 编译后落到 <code>packageA/**</code>。
+  </p>
+
+  <div class="card">
+    <p class="card__label">跳到分包 packageA</p>
+    <button class="btn btn--primary" (tap)="go('/packageA/pages/goods/goods-entry', '商品页')">
+      商品页（packageA）
+    </button>
+    <button class="btn btn--primary" (tap)="go('/packageA/pages/order/order-entry', '订单页')">
+      订单页（packageA）
+    </button>
+    <p class="card__sub">最近一次跳转：{{ lastJump() }}</p>
+  </div>
+
+  <div class="card">
+    <p class="card__label">要点</p>
+    <p class="wxs-row">1. 分包页不能当 tabBar 页，入口必须放主包。</p>
+    <p class="wxs-row">2. 首次进入分包会触发下载，可在 app.config.json 用 preloadRule 预下载。</p>
+    <p class="wxs-row">3. 独立分包（independent: true）不得依赖主包，跨包 import 会在构建期报错。</p>
+  </div>
+</div>

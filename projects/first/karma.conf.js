@@ -34,6 +34,5 @@ module.exports = function (config) {
     browsers: ['miniprogram'],
     singleRun: false,
     restartOnFileChange: true,
-    captureTimeout: 300_000,
   });
 };

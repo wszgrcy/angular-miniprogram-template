@@ -8,6 +8,9 @@
     "paths": {
       "first": [
         "./dist/first"
+      ],
+      "first/secondary": [
+        "./dist/first/secondary"
       ]
     },
     "noImplicitReturns": true,

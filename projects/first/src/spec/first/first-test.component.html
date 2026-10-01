@@ -1,1 +1,17 @@
-<lib-first #first></lib-first>
+<lib-first #first [title]="title"></lib-first>
+<lib-secondary-panel #second [price]="300"></lib-secondary-panel>
+
+<!-- tap 探针：小程序没有 click 事件，点击类交互只能绑 tap -->
+<button id="tap-probe" class="tap-probe" (tap)="onTap()">tap-probe</button>
+
+<!-- @for 内的 tap 探针：控制流里的 (tap) 要多走一段 'directive' 回解析，
+     自定义 tabBar 的 tab 按钮就是这个形状 -->
+@for (item of probeItems(); track item.id) {
+  <button
+    class="for-tap-probe"
+    id="for-probe-{{ item.id }}"
+    (tap)="onProbeTap(item.id)"
+  >
+    {{ item.label }}
+  </button>
+}
