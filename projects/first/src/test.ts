@@ -1,46 +1,28 @@
 import { bootstrapApplication } from 'angular-miniprogram';
-import { startupTest } from 'angular-miniprogram/karma/client';
+import {
+  startupMiniProgramTest,
+  type TestModuleMap,
+} from 'angular-miniprogram/vitest/runtime';
 
-const jasmineRequire = require('jasmine-core/lib/jasmine-core/jasmine.js');
+/**
+ * spec 清单，形如 `{ "./spec/x.spec.ts": () => import("./x.spec.js") }`。
+ * 值由构建期的 spec-modules 插件就地替换进来，源码里只是个占位声明。
+ */
+declare const __MP_SPEC_MODULES__: TestModuleMap;
 
-function bootWithoutGlobals() {
-  let jasmineInterface;
-  const jasmine = jasmineRequire.core(jasmineRequire);
-  const env = jasmine.getEnv({ suppressLoadErrors: true });
-  jasmineInterface = jasmineRequire.interface(jasmine, env);
+/**
+ * 测试引导入口。
+ *
+ * 顺序要求：**先 bootstrapApplication，再起 worker**。spec 里 import 的组件
+ * 要能拿到已初始化的 Angular 运行时；反过来（先起 worker）会因为宿主下发
+ * run 太快而拿到半初始化的 injector。
+ */
+async function main(): Promise<void> {
+  await bootstrapApplication();
 
-  return jasmineInterface;
+  startupMiniProgramTest({ modules: __MP_SPEC_MODULES__ });
 }
 
-const obj = bootWithoutGlobals();
-for (const key in obj) {
-  if (Object.prototype.hasOwnProperty.call(obj, key)) {
-    (wx as any).__global[key] = obj[key];
-  }
-}
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10 * 1000;
-
-describe('describe1', () => {
-  it('it1', () => {
-    console.log('main');
-    expect(true).toBe(true);
-  });
+main().catch((error) => {
+  console.error('[vitest] 引导失败', error);
 });
-
-bootstrapApplication().catch((e) => {
-  // karma 的 progress reporter 不透传 console，把错误挂到 wx 上让 spec 能断出来
-  (wx as any).__bootstrapError = String(e?.stack ?? e);
-  console.error(e);
-});
-
-// Then we find all the tests.
-const context = (require as any).context('./', true, /\.spec\.ts$/);
-// And load the modules.
-context.keys().map(context);
-
-// ng 改了 test 实例的获取时机：网页端是 spec -> component，小程序这边两者是平行的，
-// 启动动作必须排在 spec 全部加载完之后，所以这里延时一下再 startupTest()。
-setTimeout(() => {
-  startupTest();
-}, 1000);

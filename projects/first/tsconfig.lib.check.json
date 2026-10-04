@@ -1,0 +1,7 @@
+/* `first` 库的类型检查配置，只被根 `tsconfig.json` 的 references 用到。 */
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "composite": true
+  }
+}

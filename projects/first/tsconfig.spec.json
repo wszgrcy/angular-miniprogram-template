@@ -1,19 +1,16 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
+/* `first` 库测试工程的构建配置，被 `angular.json` 里 `first.test` 的
+   `tsConfig` 指向。类型检查走 `tsconfig.spec.check.json`。 */
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
-    "types": [
-      "jasmine"
-    ],
-    "skipLibCheck": true
+    "types": ["miniprogram-api-typings", "vitest/globals"],
+    "skipLibCheck": true,
+    /* `angular-miniprogram/vitest/runtime` 这个子路径只发了 .js，没带类型。
+       源码仓库自己也是 `strict: false` 在用它（spec 是测试脚手架，
+       不进库产物），这里保持一致。 */
+    "strict": false
   },
-  "files": [
-    "src/test.ts"
-  ],
-  "include": [
-    "**/*.entry.ts",
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+  "files": ["src/test.ts"],
+  "include": ["**/*.ts"]
 }

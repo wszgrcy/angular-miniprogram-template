@@ -1,0 +1,9 @@
+/* 应用工程的类型检查配置，只被根 `tsconfig.json` 的 references 用到。
+   `composite` 只能放这里：构建配置里带上它会被 analog 插件判成 TS6304。 */
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true
+  }
+}

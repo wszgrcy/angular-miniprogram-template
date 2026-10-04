@@ -1,36 +1,18 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
+/* Solution 式根配置：本身不含任何文件，只把各工程串起来。
+   - 共享选项在 `tsconfig.base.json`，由各工程自己 `extends`
+   - `npx tsc -b` 按 references 逐工程做类型检查（`.check.json` 那三个）
+   - 编辑器也按 references 认领文件
+
+   指过去的是 `*.check.json` 而不是构建配置：`tsc -b` 要求被引用的工程
+   `composite: true`，而 analog 插件对非 lib 构建强制 `declaration: false`，
+   两者在同一个文件里摆不下。构建配置归构建，检查配置归检查。
+
+   新增工程时记得在这里补一行，否则它不在任何类型检查范围内。 */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "paths": {
-      "first": [
-        "./dist/first"
-      ],
-      "first/secondary": [
-        "./dist/first/secondary"
-      ]
-    },
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
-    "declaration": false,
-    "experimentalDecorators": true,
-    "moduleResolution": "bundler",
-    "importHelpers": true,
-    "target": "es2022",
-    "module": "es2022",
-    "lib": [
-      "es2022",
-      "dom"
-    ]
-  },
-  "angularCompilerOptions": {
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true,
-    "typeCheckHostBindings": false
-  }
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.check.json" },
+    { "path": "./projects/first/tsconfig.lib.check.json" },
+    { "path": "./projects/first/tsconfig.spec.check.json" }
+  ]
 }

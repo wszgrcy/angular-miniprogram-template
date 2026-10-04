@@ -1,4 +1,1 @@
-import { bootstrapPage } from 'angular-miniprogram';
-import { WxsTestComponent } from './wxs-test.component';
-
-bootstrapPage(WxsTestComponent);
+export { WxsTestComponent as default } from './wxs-test.component';

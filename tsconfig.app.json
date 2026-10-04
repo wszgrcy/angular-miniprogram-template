@@ -1,18 +1,14 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
+/* 应用工程的构建配置，被 `angular.json` 的 `tsConfig` 指向。
+   别在这里加 `composite`：analog 插件对非 lib 构建强制 `declaration: false`，
+   和 composite 直接冲突（TS6304）。类型检查走 `tsconfig.app.check.json`。 */
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["miniprogram-api-typings"],
+    "types": ["miniprogram-api-typings", "@angular/localize/init"],
     "strict": false,
     "skipLibCheck": true
   },
   "files": ["src/main.ts"],
-  "include": [
-    "src/pages/**/*.entry.ts",
-    "src/packageA/**/*.entry.ts",
-    "src/components/**/*.entry.ts",
-    "src/custom-tab-bar/index.ts",
-    "src/**/*.d.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }

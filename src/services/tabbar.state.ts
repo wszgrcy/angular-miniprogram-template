@@ -22,6 +22,7 @@ export class TabbarState {
     { path: '/pages/library/library-entry', text: '组件库', icon: '📚' },
     { path: '/pages/wxs/wxs-entry', text: 'WXS', icon: '⚡' },
     { path: '/pages/subpkg/subpkg-entry', text: '分包', icon: '📦' },
+    { path: '/pages/i18n/i18n-entry', text: '多语言', icon: '🌏' },
   ];
 
   readonly selected = signal(0);

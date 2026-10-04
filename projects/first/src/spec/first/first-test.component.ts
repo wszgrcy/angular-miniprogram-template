@@ -10,7 +10,7 @@ import { SecondaryPanelComponent } from 'first/secondary';
   templateUrl: './first-test.component.html',
 })
 export class FirstTestComponent {
-  readonly title = 'karma 传入的一级出口标题';
+  readonly title = '测试页传入的一级出口标题';
 
   /** tap 探针：由 spec 直接派发 wxml 绑上的事件，验证事件名走通 */
   readonly taps = signal(0);

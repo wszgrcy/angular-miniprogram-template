@@ -3,7 +3,8 @@
     "pages/first/first-test-component-entry",
     "pages/tabbar/tab-second-entry",
     "pages/wxs/wxs-test-entry",
-    "pages/wxs-inline/wxs-inline-entry"
+    "pages/wxs-inline/wxs-inline-entry",
+    "pages/i18n/i18n-test-component-entry"
   ],
   "tabBar": {
     "color": "#888888",

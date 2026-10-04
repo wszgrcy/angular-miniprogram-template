@@ -1,6 +1,8 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
+/* `first` 库的构建配置，被 ng-packagr 用到（`ng-package.json` 的入口 +
+   angular.json 的 `tsConfig`）。类型检查走 `tsconfig.lib.check.json`。
+   `src/spec/**` 是测试夹具，不是库源码，这里排除掉。 */
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/lib",
     "declaration": true,
@@ -8,10 +10,7 @@
     "inlineSources": true,
     "types": []
   },
-  "exclude": [
-    "src/test.ts",
-    "**/*.spec.ts"
-  ],
+  "exclude": ["src/test.ts", "src/spec/**", "**/*.spec.ts"],
   "angularCompilerOptions": {
     "compilationMode": "full"
   }

@@ -115,7 +115,7 @@ describe('库出口 / 渲染 / select 查询', () => {
 
     // 必须**先订阅再跳转**。onAppRoute 是事件流，不会重发历史，
     // 等 reLaunch 完了再去注册，路由事件早就发出去了，
-    // 这个 await 会一直挂到 jasmine 10s 超时。
+    // 这个 await 会一直挂到 vitest 的 hookTimeout。
     const loaded = waitLoad()
       .pipe(
         filter((item) => item.openType === 'reLaunch'),
@@ -131,7 +131,7 @@ describe('库出口 / 渲染 / select 查询', () => {
 
   async function pageContext() {
     const page = getCurrentPages()[0];
-    expect(!!page).toBeTrue('页面为空');
+    expect(!!page, '页面为空').toBe(true);
     const vm = (await waitFor(
       '页面 Angular 实例',
       () => (page as any).__ngComponentInstance,
@@ -143,10 +143,13 @@ describe('库出口 / 渲染 / select 查询', () => {
 
   it('一级出口组件渲染并可被 select 查到', async () => {
     const { vm, finder } = await pageContext();
-    expect(vm.firstComponent).toBeTruthy('拿不到一级出口组件实例');
+    expect(vm.firstComponent, '拿不到一级出口组件实例').toBeTruthy();
 
     const wxComponent = await toWxInstance(finder, vm.firstComponent);
-    expect(!!wxComponent).toBeTrue('一级出口组件没有对应的小程序实例');
+    expect(
+      !!wxComponent,
+      '一级出口组件没有对应的小程序实例',
+    ).toBe(true);
 
     const rect = await boundingRect(wxComponent, '.lib-first');
     expect(rect.height).toBeGreaterThan(0);
@@ -154,10 +157,13 @@ describe('库出口 / 渲染 / select 查询', () => {
 
   it('二级出口组件渲染并可被 select 查到', async () => {
     const { vm, finder } = await pageContext();
-    expect(vm.secondComponent).toBeTruthy('拿不到二级出口组件实例');
+    expect(vm.secondComponent, '拿不到二级出口组件实例').toBeTruthy();
 
     const wxComponent = await toWxInstance(finder, vm.secondComponent);
-    expect(!!wxComponent).toBeTrue('二级出口组件没有对应的小程序实例');
+    expect(
+      !!wxComponent,
+      '二级出口组件没有对应的小程序实例',
+    ).toBe(true);
 
     const rect = await boundingRect(wxComponent, '.lib-secondary');
     expect(rect.height).toBeGreaterThan(0);
@@ -205,9 +211,10 @@ describe('库出口 / 渲染 / select 查询', () => {
 
     const before = vm.probeHits().length;
     await dispatchTap(page, '#for-probe-1');
-    expect(vm.probeHits().length)
-      .withContext('@for 内的 tap 完全没进监听 → 控制流内事件链断了')
-      .toBe(before + 1);
+    expect(
+      vm.probeHits().length,
+      '@for 内的 tap 完全没进监听 → 控制流内事件链断了',
+    ).toBe(before + 1);
     expect(vm.probeHits()[before]).toBe(1);
 
     await dispatchTap(page, '#for-probe-2');

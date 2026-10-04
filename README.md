@@ -7,7 +7,7 @@ Angular 开发小程序（微信 / 支付宝 / 百度 / QQ …）的初始化模
 ## 环境
 
 - Node `^22.22.3 || ^24.15.0`（Angular 22 的 engines 要求）
-- 微信开发者工具（跑 `ng test` 时需要）
+- 微信开发者工具（跑 `npm run test:wechat` 时需要）
 
 ## 命令
 
@@ -17,17 +17,47 @@ Angular 开发小程序（微信 / 支付宝 / 百度 / QQ …）的初始化模
 | `npm run build`       | 构建小程序（development）                |
 | `npm run build:prod`  | 构建小程序（production）                 |
 | `npm start`           | `ng build --watch`                       |
-| `npm run test:lib`    | 只起 karma server（需自己拉开发者工具）  |
-| `npm run test:wechat` | 一键跑小程序 karma 测试（推荐）          |
+| `npm run test:build`  | 只把 spec 编成测试小程序产物（不起 vitest）|
+| `npm run test:wechat` | 一键跑小程序运行时测试（vitest，推荐）  |
+| `npm run typecheck`   | `tsc -b`，按 references 逐工程做类型检查  |
 
 产物在 `dist/angular-miniprogram-template`，用微信开发者工具打开该目录即可。
 
-> `build` 之前必须先 `build:lib`：`tsconfig.json` 的 `paths` 把 `first`
+> `build` 之前必须先 `build:lib`：`tsconfig.base.json` 的 `paths` 把 `first`
 > 指到 `dist/first`，库没构建的话应用编译会找不到模块。
 
-## 五个 Demo 对应哪些文件
+## tsconfig 怎么摆的
 
-模板里放了 5 个 demo，各自的文件如下。
+根 `tsconfig.json` 是 **solution 式**的：`files: []`，本身不编译任何东西，
+只 `references` 三个工程。共享选项全部在 `tsconfig.base.json`。
+
+```
+tsconfig.json                 solution：只有 files:[] + references
+tsconfig.base.json            共享 compilerOptions / angularCompilerOptions / paths
+
+tsconfig.app.json             应用构建配置（angular.json 指它）
+tsconfig.app.check.json       应用类型检查（+ composite）
+
+projects/first/tsconfig.lib.json        库构建配置（ng-packagr 用）
+projects/first/tsconfig.lib.check.json  库类型检查
+projects/first/tsconfig.spec.json       测试构建配置（first.test 指它）
+projects/first/tsconfig.spec.check.json 测试类型检查
+```
+
+**为什么构建配置和检查配置要分开：**`tsc -b` 要求被引用的工程
+`composite: true`，而 composite 不允许 `declaration: false`；analog 插件对非 lib
+构建又**强制** `declaration: false`。同一个文件里摆不下，所以
+`composite` 只放在 `*.check.json` 里，构建配置保持干净。
+
+新增工程时：写个构建配置，再写个 `*.check.json`，根 `tsconfig.json` 补一行
+references。漏了 references 就等于这个工程不在任何类型检查范围内。
+
+> `tsc -b` 只查 TS，不查模板（`strictTemplates` 那套要 `ng build`）。
+> 产物落在 `out-tsc/`（已 gitignore），不会碰到 `dist/`。
+
+## 六个 Demo 对应哪些文件
+
+模板里放了 6 个 demo，各自的文件如下。
 
 ### Demo 1：小程序基础演示（`@if` / `@for` + signal）
 
@@ -35,7 +65,7 @@ Angular 开发小程序（微信 / 支付宝 / 百度 / QQ …）的初始化模
 | --- | --- |
 | `src/pages/home/home.component.ts` | signal / computed / 派生列表，inc·reset·togglePanel·cycleMode |
 | `src/pages/home/home.component.html` | `@if`/`@else if`/`@else`、`@for`+`@empty`、`@switch` |
-| `src/pages/home/home.entry.ts` | `bootstrapPage(HomeComponent)` —— 页面入口 |
+| `src/pages/home/home.entry.ts` | `export { HomeComponent as default }` —— 页面入口 |
 | `src/pages/home/home.entry.json` | 页面配置（导航栏标题等） |
 
 ### Demo 2：组件库一级 / 二级出口
@@ -59,7 +89,7 @@ Angular 开发小程序（微信 / 支付宝 / 百度 / QQ …）的初始化模
 | `src/pages/library/library.component.ts` | 同时引 `first` 与 `first/secondary`，父传子 / 子抛父 / 服务共享 |
 | `src/pages/library/library.component.html` | 两个库组件的用法 |
 | `src/pages/library/library.entry.ts` / `.entry.json` | 页面入口与配置 |
-| `tsconfig.json` → `paths` | `first` → `./dist/first`，`first/secondary` → `./dist/first/secondary` |
+| `tsconfig.base.json` → `paths` | `first` → `./dist/first`，`first/secondary` → `./dist/first/secondary` |
 
 > 二级出口目录放在 `projects/first/secondary`（和 `src` **同级**），不是
 > `src/secondary`。ng-packagr 按「主 `ng-package.json` 所在目录的相对路径」
@@ -115,11 +145,32 @@ Angular 开发小程序（微信 / 支付宝 / 百度 / QQ …）的初始化模
 >
 > 约定：分包根目录既是源码目录也是产物目录，`src/packageA/**` → `packageA/**`。
 
+### Demo 6：多语言（运行时 i18n）
+
+| 文件 | 作用 |
+| --- | --- |
+| `angular.json` → `build.options.polyfills` | `["@angular/localize"]`：构建器据此注入 `@angular/localize/init`，挂上全局 `$localize` |
+| `tsconfig.app.json` → `compilerOptions.types` | 加 `@angular/localize/init`，让 `$localize` 在 TS 里有类型 |
+| `src/services/locale.ts` | 译文表 + `applyLocale` / `readStoredLocale`（`loadTranslations` / `clearTranslations`） |
+| `src/main.ts` | bootstrap **之前** `applyLocale(readStoredLocale())` |
+| `src/pages/i18n/*` | `i18n` 静态文案、插值、ICU `select`/`plural`、`i18n-*` 属性、TS 里直接用 `$localize` |
+
+要点（都在 `src/services/locale.ts` 的注释里）：
+
+- 消息一律用 `i18n="@@xxx"` 显式命名，译文表的 key 就是 `xxx`。
+  不命名则由编译器按文案算哈希，改一个字 id 就变。
+- 译文里的占位符名必须与编译产物逐字一致，写错**不报错**、只静默退回源文案。
+  名字去产物里 grep：`grep -o '`:[^`]*`' dist/<app>/pages/i18n/i18n-entry.js`。
+- 生效时机：模板文案的译文在组件 `consts` 首次求值时定死，`consts` 每个组件
+  类型只求一次。所以译文必须在该组件**首次渲染之前**就位（本页靠 `main.ts`），
+  运行中切换只对没渲染过的组件生效，已渲染的要重启小程序。
+
 ### 共用文件
 
 | 文件 | 作用 |
 | --- | --- |
 | `src/main.ts` | `bootstrapApplication()`，app 级 provider |
+| `src/services/locale.ts` | Demo 6 的译文表与语言切换 |
 | `src/app.config.json` | 结构化 app 配置（pages / entryPagePath / window / tabBar / subpackages / preloadRule） |
 | `src/styles.scss` | 全局共用样式（`.page` / `.card` / `.btn` / `.panel` / `.tip` / `.row` / `.empty`） |
 | `src/components/component1/*` | 自定义组件（`*.entry.ts`）示例 |
@@ -128,8 +179,14 @@ Angular 开发小程序（微信 / 支付宝 / 百度 / QQ …）的初始化模
 
 - 页面 / 组件入口一律 `*.entry.ts`，产物名由源文件名推导：
   `home.entry.ts` → `pages/home/home-entry`。
-- 组件入口放 `src/components/**`，在 `angular.json` 的 `components` 里配 pattern。
-- `custom-tab-bar` 是唯一例外：入口必须叫 `index.ts`。
+- 入口文件只声明「绑定哪个组件」，写法是 **default export**；
+  `bootstrapPage` / `componentRegistry` / `bootstrapCustomTabbar` 由构建器生成，
+  业务代码里不出现框架 API。没有 default export 的入口直接构建失败。
+- **组件不需要在 `angular.json` 里声明范围**：sourceRoot 下剩下的 `*.entry.ts`
+  全当组件，产物路径按 sourceRoot 镜像。前提是它们被 `tsConfig` 的编译单元覆盖
+  （`tsconfig.app.json` 的 `include` 是 `src/**/*.ts`）。
+- `custom-tab-bar` 是唯一目录写死的：源目录固定 `<sourceRoot>/custom-tab-bar`，
+  入口 `index.entry.ts` → 产物 `custom-tab-bar/index`。
 
 ## 入口与启动页
 
@@ -139,11 +196,11 @@ Angular 开发小程序（微信 / 支付宝 / 百度 / QQ …）的初始化模
 | --- | --- | --- |
 | 启动页 | `app.config.json` → `entryPagePath` | 冷启动进哪个页；不填则用 `pages[0]` |
 | 页面清单 | `app.config.json` → `pages` / `subpackages` | 声明页面路径，要逐字对上产物路径 |
-| 页面入口 | `src/pages/xxx/xxx.entry.ts` | `bootstrapPage(XxxComponent)`，被 `pages` pattern 编进来 |
+| 页面入口 | `src/pages/xxx/xxx.entry.ts` | default export 组件类，被 `pages` pattern 编进来 |
 
 加一个页面：
 
-1. `src/pages/xxx/xxx.component.ts`（standalone）+ `xxx.entry.ts`（`bootstrapPage`）；
+1. `src/pages/xxx/xxx.component.ts`（standalone）+ `xxx.entry.ts`（default export）；
 2. `app.config.json` 的 `pages` 里加 `pages/xxx/xxx-entry`；
 3. 确认目录被 `angular.json` 的 `build.options.pages` pattern 覆盖
    （模板默认只盖 `src/pages` 与 `src/packageA`，新目录得自己补一条）。
@@ -246,93 +303,94 @@ grep -l "var StandaloneService"     dist/angular-miniprogram-template/*.js
    旧的 `pageStartup(Module, Component)` 仍可用但已 `@deprecated`。
 3. **`angular-miniprogram/common` 这个入口没了**，直接用 `@angular/common`。
 4. **不再引 `zone.js`**，链路已 zoneless。
-5. **TS 6.0**：`strict` 默认开启、`baseUrl` / `moduleResolution: node` 等
-   被标废弃，根 `tsconfig.json` 里显式写了 `ignoreDeprecations: "6.0"`，
-   `moduleResolution` 换成 `bundler`（Angular 21 起 core 的裸子路径导入
-   需要 exports map）。
+5. **TS 6.0**：`baseUrl` / `moduleResolution: node` 等被标废弃，
+   `tsconfig.base.json` 里 `moduleResolution` 用 `bundler`（Angular 21 起
+   core 的裸子路径导入需要 exports map）。
 
 ## 跑 `first` 库的测试
 
-`npm run test:lib` 会：
-
-1. 用 Vite 把测试小程序打到 `dist/karma/first`
-   （**不要**把 `outputPath` 配成 `dist` 根，`emptyOutDir` 会把
-   `dist/first` 删掉，应用就编不出来了）
-2. 起 karma server（9876），等小程序客户端连上来
-
-测试链路本身是通的，但 karma 的 launcher 是占位实现，**不会**自己拉起
-开发者工具。模板自带了一键执行器把两端串起来：
+测试跑在**真·小程序运行时**里，用 vitest。spec 不在 Node 进程里执行：它们被编进
+测试小程序产物，由开发者工具里的小程序运行时跑，宿主只负责调度和收结果。
 
 ```bash
 npm run test:wechat
-# 等价于 node ./scripts/wechat-karma.cjs --target first
+# 等价于 node ./scripts/wechat-vitest.cjs \
+#   --project . --dist ./dist/vitest/first --target first:test
 ```
 
-它做的事：预检登录态 → 关掉残留自动化窗口 → 清 karma 端口 →
-起 `ng test` → `cli auto` 拉起产物 → 抓日志判定 → 收尾杀进程树。
-跑完出 `[PASS] Executed 5 of 5 SUCCESS`，退出码 0，可直接进 CI。
+它做的事：预检开发者工具服务端口 → `ng run first:test` 编产物 → 后台起 vitest
+（内部起 WS server）→ `cli auto` 打开产物目录 → 设备连回来开跑 → 透传输出与退出码。
 
-当前 karma 覆盖的用例（`projects/first/src/spec/first/component.spec.ts`）：
+跑完是 `Test Files 4 passed (4) / Tests 18 passed (18)`，退出码 0，可直接进 CI。
+实测整轮 14s。
 
-1. 一级出口组件渲染，并能用 `createSelectorQuery().select('.lib-first')` 查到节点
-2. 二级出口组件渲染，同样能 `select('.lib-secondary')` 查到
-3. signal 驱动组件状态，`@Output` 能抛到父组件
-4. 二级出口 computed + 自带服务可用
+### 连接方向
+
+设备端 `wx.connectSocket` **主动连出** `ws://<clientHost>:<port>`，宿主只监听。
+所以不需要 launcher，也不需要自动化客户端 —— 把项目打开就够了。
+
+端口在两个地方，必须一致，否则产物连 A、宿主在 B，永远连不上：
+
+| 位置                          | 键            | 默认  |
+| ----------------------------- | ------------- | ----- |
+| `angular.json`                | `…test.options.port` | 17900 |
+| `vitest.config.mts`           | `MP_VITEST_PORT`     | 17900 |
+
+`scripts/wechat-vitest.cjs --port` 会把同一个数同时透给两边。自己分开跑的时候
+别让它们错开 —— 表现是宿主一直卡在「等设备连入」，然后一句 `connect timeout`。
+
+### 当前覆盖的用例
+
+| 文件 | 钉住什么 |
+| --- | --- |
+| `spec/first/component.spec.ts` | 一级/二级出口渲染、`select` 查询、signal + `@Output`、wxml 事件链、`@for` 内事件命中对应那一项 |
+| `spec/wxs/wxs.spec.ts` | `templateUrl` 里的 wxs 被剥到渲染层并真的执行；property 绑定不被拍平 |
+| `spec/wxs-inline/wxs-inline.spec.ts` | inline `template` 的 wxs 下推（和 `templateUrl` 是两条剥离路径，只测前者会漏整条 inline 链路） |
+| `spec/i18n/i18n.spec.ts` | 运行时 i18n：静态消息、带插值的消息、ICU 的 select / plural 分支、`i18n-alt` 属性消息 |
+
+> i18n spec 能跑起来的前提是 `angular.json` 里 `first.test.options.polyfills`
+> 声明了 `@angular/localize`。不声明时 `$localize` 是 core 的恒等实现，ICU
+> 分支不解析，页面上直接登 `{VAR_SELECT, select, ...}` 原文 —— 构建一个字都不提。
 
 > **`select` 查询是可用的**：先 `ComponentFinderService.get(ngInstance)` 拿到
 > 对应的微信组件实例，再 `wxComponent.createSelectorQuery().select(...)`。
-> 注意 `ComponentFinderService.get()` 返的是 **Promise**，不是 Observable，
-> 直接 `.pipe()` 会报 `wxComponent.pipe is not a function`。
+> 注意 `ComponentFinderService.get()` 返的是 **Promise**，不是 Observable。
 
-前置条件（脚本会预检，不满足直接报错，而不是白等 5 分钟）：
+### 加一个 spec
 
-1. 微信开发者工具已启动，且 **设置 → 安全设置 → 服务端口** 已开启
-2. 已扫码登录（CLI 自己拉起的实例是登出态，等多久都不会恢复）
+1. 在 `projects/first/src/spec/<名字>/` 下放三件套：
+   `<名字>.entry.ts`（页面入口，`export default` 页面组件）、`<名字>.entry.json`、
+   `<名字>.spec.ts`
+2. `angular.json` 的 `first.test.options.pages` 已经用 `**/*.entry.ts` 通配整个
+   `src/spec`，加目录不用改配置
+3. `vitest.config.mts` 的 `test.include` 同样是 `**/*.spec.ts` 通配，不用动
 
-常用参数：
-
-| 参数           | 说明                                      |
-| -------------- | ----------------------------------------- |
-| `--target`     | `ng test` 的目标（默认 `first`）          |
-| `--dist`       | 测试产物目录（默认 `dist/karma/<target>`）|
-| `--cli`        | 开发者工具 cli 路径（或 `WX_DEVTOOLS_CLI`）|
-| `--auto-port`  | 自动化端口（默认 9420）                   |
-| `--ide-port`   | IDE 服务端口（不传则读 CLI 记录的值）     |
-| `--timeout`    | 等结果上限秒数（默认 180）               |
-| `--keep-open`  | 跑完不关开发者工具里的项目窗口            |
-
-失败时会打「失败诊断」块，指出卡在哪个阶段，不用对着日志猜。
-
-> **游客 appid（`touristappid`）实测能跑 CLI 自动化**，不需要真实 AppID。
-> 产物里 `setting.urlCheck` 已置为 `false`：测试客户端要用 socket.io 回连
-> `127.0.0.1:9876`，开着合法域名校验会被拦。
+builder 会自己扫 `sourceRoot` 下的 spec（日志里「发现 N 个 spec」那行就是它），
+漏了页面入口会直接报「没声明入口组件」，不会静默少跑。
 
 ### 手动方式（调试用）
 
 ```bash
-# 终端 A：起 karma server（会一直等着）
-npm run test:lib
+# 终端 A：编产物 + 起 vitest，等设备连入
+npm run test:build
+npx vitest run
 
-# 终端 B：拉起项目并开自动化
-"<安装路径>/cli.bat" auto   --project "<绝对路径>/dist/karma/first" --auto-port 9420
+# 终端 B：用开发者工具打开产物目录
+# 注意用 auto 不是 open —— `cli open` 对游客 appid 直接报 code 10
+"<安装路径>/cli.bat" auto --project "<绝对路径>/dist/vitest/first" --auto-port 9420
 ```
 
-或者 GUI：微信开发者工具 → 导入项目 → 选 `dist/karma/first`。
+或者 GUI：微信开发者工具 → 导入项目 → 选 `dist/vitest/first`。
 
-### 端口注意
+### 前置条件
 
-`KARMA_PORT` 是**编译期**烧进产物的（默认 9876）。如果 9876 已被占用，
-karma server 会自己漂到 9877，但产物里仍然连 9876 —— 表现是客户端
-连不上、一直卡在 `Starting browser miniprogram`。
+1. 微信开发者工具已启动，且 **设置 → 安全设置 → 服务端口** 已开启
+2. 真实 AppID 需要已扫码登录；游客 appid（`touristappid`）不需要
 
-`npm run test:wechat` 跑之前会按端口把残留进程清掉，正常不用管；
-手动跑的话自己确认一下：
+产物里 `setting.urlCheck` 已置为 `false`：设备要用 ws 回连
+`127.0.0.1:17900`，开着合法域名校验会被拦。
 
-```bash
-netstat -ano | grep 9876   # 有残留就先杀
-```
-
-要连真机，把 builder 配置里的 `clientHost` 改成开发机的局域网 IP
+要连真机，把 `angular.json` 里的 `clientHost` 改成开发机的局域网 IP
 （默认 `127.0.0.1`；微信模拟器解不了 `localhost`）。
 
 ## 模板正文里不能写裸的 `{`

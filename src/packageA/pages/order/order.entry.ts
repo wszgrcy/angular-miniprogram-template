@@ -1,4 +1,1 @@
-import { bootstrapPage } from 'angular-miniprogram';
-import { PackageAOrderComponent } from './order.component';
-
-bootstrapPage(PackageAOrderComponent);
+export { PackageAOrderComponent as default } from './order.component';

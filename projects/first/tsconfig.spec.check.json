@@ -1,0 +1,8 @@
+/* `first` 测试工程的类型检查配置，只被根 `tsconfig.json` 的 references 用到。 */
+{
+  "extends": "./tsconfig.spec.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true
+  }
+}

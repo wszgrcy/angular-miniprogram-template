@@ -1,0 +1,43 @@
+<div class="page">
+  <h1 class="page__title" i18n="@@i18n.title">多语言</h1>
+  <p class="page__hint">
+    本库走的是运行时 i18n：angular.json 的 <code>polyfills</code> 里声明
+    <code>@angular/localize</code>，构建器据此注入 <code>@angular/localize/init</code>，
+    模板里的 <code>i18n</code> 与 ICU 由全局 <code>$localize</code> 在运行时取译文。
+    不做 AOT 内联，也不抽 xliff。
+  </p>
+
+  <div class="card">
+    <p class="card__label" i18n="@@i18n.switch">切换语言</p>
+    <button class="btn" [class.btn--primary]="locale() === 'zh'" (tap)="use('zh')">中文</button>
+    <button class="btn" [class.btn--primary]="locale() === 'en'" (tap)="use('en')">English</button>
+    <button class="btn btn--danger" (tap)="restart()">重启生效</button>
+    <p class="tip">{{ liveLabel }}</p>
+    <p class="tip tip--warn">
+      本页文案的译文在首次渲染时就定死了，切换后要重启才看得到；上面那行是取值时才求值，立刻跟着变
+    </p>
+  </div>
+
+  <div class="card">
+    <p class="card__label" i18n="@@i18n.plain">静态文案与插值</p>
+    <p i18n="@@i18n.cart">购物车</p>
+    <p i18n="@@i18n.cartCount">购物车里有 {{ count() }} 件商品</p>
+    <button class="btn" (tap)="add()">+1</button>
+  </div>
+
+  <div class="card">
+    <p class="card__label" i18n="@@i18n.icu">ICU（select / plural）</p>
+    <p i18n="@@i18n.select">{gender(), select, male {他} female {她} other {TA}}</p>
+    <p i18n="@@i18n.plural">{count(), plural, =0 {还没有商品} one {只有一件} other {{{count()}} 件}}</p>
+    <button class="btn" (tap)="cycleGender()">gender = {{ gender() }}</button>
+    <p class="tip tip--muted">
+      ICU 前后的空白会被并进消息本体，带 ICU 的那行不能折行；分支里也不能放标签
+    </p>
+  </div>
+
+  <div class="card">
+    <p class="card__label" i18n="@@i18n.attr">i18n 属性</p>
+    <img i18n-alt="@@i18n.alt" alt="照片 {{ count() }}" i18n-title="@@i18n.titleAttr" title="标题" />
+    <p class="card__sub">alt 跟着 count 走，title 是静态的</p>
+  </div>
+</div>

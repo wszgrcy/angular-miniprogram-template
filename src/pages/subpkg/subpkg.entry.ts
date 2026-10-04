@@ -1,4 +1,1 @@
-import { bootstrapPage } from 'angular-miniprogram';
-import { SubpkgEntryComponent } from './subpkg.component';
-
-bootstrapPage(SubpkgEntryComponent);
+export { SubpkgEntryComponent as default } from './subpkg.component';

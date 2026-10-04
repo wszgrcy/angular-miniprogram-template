@@ -38,23 +38,11 @@
                 "output": "packageA"
               }
             ],
-            "components": [
-              {
-                "glob": "**/*.entry.ts",
-                "input": "./src/components",
-                "output": "components"
-              },
-              {
-                "glob": "index.ts",
-                "input": "./src/custom-tab-bar",
-                "output": "custom-tab-bar"
-              }
-            ],
             "platform": "wx",
             "outputPath": "dist/angular-miniprogram-template",
             "index": "",
             "main": "src/main.ts",
-            "polyfills": "",
+            "polyfills": ["@angular/localize"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -109,7 +97,7 @@
     "first": {
       "projectType": "library",
       "root": "projects/first",
-      "sourceRoot": "projects/first/src",
+      "sourceRoot": "projects/first",
       "prefix": "lib",
       "architect": {
         "build": {
@@ -128,28 +116,19 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "angular-miniprogram:karma",
+          "builder": "angular-miniprogram:vitest",
           "options": {
             "main": "./projects/first/src/test.ts",
-            "outputPath": "dist/karma/first",
+            "outputPath": "dist/vitest/first",
             "platform": "wx",
+            "port": 17900,
+            "clientHost": "127.0.0.1",
+            "polyfills": ["@angular/localize"],
             "pages": [
               {
                 "glob": "**/*.entry.ts",
                 "input": "./projects/first/src/spec",
                 "output": "pages"
-              }
-            ],
-            "components": [
-              {
-                "glob": "**/*.entry.ts",
-                "input": "./projects/first/src/lib",
-                "output": "components"
-              },
-              {
-                "glob": "**/*.entry.ts",
-                "input": "./projects/first/secondary",
-                "output": "components"
               }
             ],
             "assets": [
@@ -164,8 +143,7 @@
                 "output": "./"
               }
             ],
-            "tsConfig": "projects/first/tsconfig.spec.json",
-            "karmaConfig": "projects/first/karma.conf.js"
+            "tsConfig": "projects/first/tsconfig.spec.json"
           }
         }
       }

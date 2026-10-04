@@ -147,9 +147,10 @@ describe('WXS 渲染层脚本', () => {
     const page = await pageContext();
     const tree = JSON.stringify(page.data.nodeList);
 
-    expect((page.data.nodeList || []).length)
-      .withContext(`节点树为空 → ${(await pageHint())}`)
-      .toBeGreaterThan(0);
+    expect(
+      (page.data.nodeList || []).length,
+      `节点树为空 → ${(await pageHint())}`,
+    ).toBeGreaterThan(0);
     // 模板里若还残留 fmt 标识符，Angular 编译期就挂了；运行期这里再兜一层
     expect(tree).not.toContain('fmt');
   });
@@ -160,14 +161,16 @@ describe('WXS 渲染层脚本', () => {
     // badge(3) -> num-03，priceClass(1234.5) -> p-1234_50
     // class 由渲染层算，能 select 到就说明 wxs 模块加载并跑通了
     const badge = await rectOf(page, '.num-03');
-    expect(badge.height)
-      .withContext('pad() 的 class 没落到节点上 → wxs 没在渲染层跑')
-      .toBeGreaterThan(0);
+    expect(
+      badge.height,
+      'pad() 的 class 没落到节点上 → wxs 没在渲染层跑',
+    ).toBeGreaterThan(0);
 
     const price = await rectOf(page, '.p-1234_50');
-    expect(price.height)
-      .withContext('money() 的 class 没落到节点上 → wxs 没在渲染层跑')
-      .toBeGreaterThan(0);
+    expect(
+      price.height,
+      'money() 的 class 没落到节点上 → wxs 没在渲染层跑',
+    ).toBeGreaterThan(0);
   });
 
   it('property 绑定把枝叶数组原样下推进 property', async () => {
@@ -175,14 +178,13 @@ describe('WXS 渲染层脚本', () => {
     const node = (page.data.nodeList as any[]).find((n: any) =>
       String(n.class || '').includes('wxs-dyn'),
     );
-    expect(!!node).withContext('wxs-dyn 节点没渲染').toBeTrue();
+    expect(!!node, 'wxs-dyn 节点没渲染').toBe(true);
 
     // setProperty 不拍平，所以这里必须是真数组，wxml 的 property.bar[0] 才取得到
-    expect(Array.isArray(node.property.bar))
-      .withContext(
-        `枝叶数组被拍平了 → property.bar=${JSON.stringify(node.property.bar)}`,
-      )
-      .toBeTrue();
+    expect(
+      Array.isArray(node.property.bar),
+      `枝叶数组被拍平了 → property.bar=${JSON.stringify(node.property.bar)}`,
+    ).toBe(true);
     expect(node.property.bar).toEqual([7]);
   });
 
@@ -190,8 +192,8 @@ describe('WXS 渲染层脚本', () => {
     const page = await pageContext();
     const vm: any = page.__ngComponentInstance;
 
-    expect(vm.on()).toBeFalse();
+    expect(vm.on()).toBe(false);
     await dispatchTap(page, '.wxs-btn');
-    expect(vm.on()).toBeTrue();
+    expect(vm.on()).toBe(true);
   });
 });

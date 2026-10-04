@@ -1,7 +1,7 @@
 import { Component, NO_ERRORS_SCHEMA, signal } from '@angular/core';
 
 /**
- * wxs 渲染层脚本的 karma fixture。
+ * wxs 渲染层脚本的 vitest fixture。
  *
  * `styleUrls` 是刻意留下的：带 wxs 的组件要走 fileReplacements 换文件，
  * 换完位置后样式解析不到就会把组件 poison 掉，AOT 静默退化成 JIT ——

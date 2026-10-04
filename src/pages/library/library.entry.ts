@@ -1,4 +1,1 @@
-import { bootstrapPage } from 'angular-miniprogram';
-import { LibraryDemoComponent } from './library.component';
-
-bootstrapPage(LibraryDemoComponent);
+export { LibraryDemoComponent as default } from './library.component';
