@@ -40,9 +40,8 @@
             ],
             "platform": "wx",
             "outputPath": "dist/angular-miniprogram-template",
-            "index": "",
             "main": "src/main.ts",
-            "polyfills": ["@angular/localize"],
+            "polyfills": ["@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -55,12 +54,10 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
             "appJson": "src/app.config.json"
           },
           "configurations": {
             "production": {
-              "vendorChunk": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -82,12 +79,8 @@
               "outputHashing": "none"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "development"
@@ -123,7 +116,7 @@
             "platform": "wx",
             "port": 17900,
             "clientHost": "127.0.0.1",
-            "polyfills": ["@angular/localize"],
+            "polyfills": ["@angular/localize/init"],
             "pages": [
               {
                 "glob": "**/*.entry.ts",
