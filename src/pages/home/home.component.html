@@ -1,9 +1,57 @@
 <div class="page">
   <h1 class="page__title">{{ title() }}</h1>
   <p class="page__hint">
-    本页演示 Angular 内置控制流（&#64;if / &#64;for / &#64;switch）与 signal
-    状态。
+    本页演示 Angular 内置控制流（&#64;if / &#64;for / &#64;switch）、signal
+    状态、内容投影与节点查询。
   </p>
+
+  <div class="card">
+    <p class="card__label">内容投影：ng-content 兜底（一个文件多组件）</p>
+    <p class="card__sub">
+      黄底是兜底（子组件自己的模板），蓝底是外部投影进来的。投了兜底就该消失。
+    </p>
+    <proj-none></proj-none>
+    <proj-default></proj-default>
+    <proj-named></proj-named>
+  </div>
+
+  <div class="card">
+    <p class="card__label">节点查询：单节点 #box</p>
+
+    @if (boxAlive()) {
+      <view #box class="box">{{ boxText() }}</view>
+    } @else {
+      <div class="empty">#box 已经被销毁了</div>
+    }
+
+    <button class="btn btn--primary" (tap)="measureBox()">量 #box</button>
+    <button class="btn" (tap)="toggleBox()">销毁 / 重建</button>
+    <button class="btn" (tap)="bumpHeight()">改文案（变高）</button>
+
+    <p class="tip">{{ boxResult() }}</p>
+    <p class="card__sub">
+      销毁后再量应该是 null：class 由节点路径算出来，结构一变就作废，
+      所以每次都要现调 find()。
+    </p>
+  </div>
+
+  <div class="card">
+    <p class="card__label">节点查询：&#64;for 多实例，每行一个 #row</p>
+
+    @for (item of rowList(); track item.id) {
+      <view #row class="row-box">{{ item.name }}</view>
+    } @empty {
+      <div class="empty">没有行</div>
+    }
+
+    <button class="btn btn--primary" (tap)="measureRows()">量所有 #row</button>
+    <button class="btn" (tap)="addRow()">加一行</button>
+
+    <p class="tip">{{ rowResult() }}</p>
+    <p class="card__sub">
+      class 用的是全路径而不是视图内局部下标，所以 &#64;for 的多个实例天然不撞。
+    </p>
+  </div>
 
   <div class="card">
     <p class="card__label">signal 计数</p>

@@ -1,0 +1,22 @@
+.box {
+  margin: 16rpx 0;
+  padding: 24rpx;
+  border-radius: 8rpx;
+  background: #e8f5e9;
+  color: #1b5e20;
+  font-size: 26rpx;
+}
+
+.row-box {
+  margin: 12rpx 0;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  background: #f0f7ff;
+  color: #1f2329;
+  font-size: 24rpx;
+}
+
+/* 投影进 proj-child 的内容属于首页模板，样式归这里 */
+.host {
+  color: #2569ca;
+}

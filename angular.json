@@ -51,9 +51,7 @@
                 "output": "./"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "appJson": "src/app.config.json"
           },
           "configurations": {
@@ -76,7 +74,8 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "none"
+              "outputHashing": "none",
+              "optimization": true
             },
             "development": {
               "optimization": false,

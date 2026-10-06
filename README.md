@@ -20,6 +20,7 @@ Angular 开发小程序（微信 / 支付宝 / 百度 / QQ …）的初始化模
 | `npm run test:build`  | 只把 spec 编成测试小程序产物（不起 vitest）|
 | `npm run test:wechat` | 一键跑小程序运行时测试（vitest，推荐）  |
 | `npm run typecheck`   | `tsc -b`，按 references 逐工程做类型检查  |
+| `npm run lib:local`   | 源码仓库 `build` → `npm pack` → 装成 tgz（本地改库时用）|
 
 产物在 `dist/angular-miniprogram-template`，用微信开发者工具打开该目录即可。
 
@@ -59,14 +60,32 @@ references。漏了 references 就等于这个工程不在任何类型检查范�
 
 模板里放了 6 个 demo，各自的文件如下。
 
-### Demo 1：小程序基础演示（`@if` / `@for` + signal）
+### Demo 1：小程序基础演示（`@if` / `@for` + signal + 节点查询）
 
 | 文件 | 作用 |
 | --- | --- |
-| `src/pages/home/home.component.ts` | signal / computed / 派生列表，inc·reset·togglePanel·cycleMode |
-| `src/pages/home/home.component.html` | `@if`/`@else if`/`@else`、`@for`+`@empty`、`@switch` |
+| `src/pages/home/home.component.ts` | signal / computed / 派生列表，inc·reset·togglePanel·cycleMode；`viewChild` / `viewChildren` + `AgentNode.find()` 量节点 |
+| `src/pages/home/home.component.html` | `@if`/`@else if`/`@else`、`@for`+`@empty`、`@switch`、内容投影、`#box` / `#row` 查询 |
+| `src/pages/home/home.component.scss` | 组件样式（`.box` / `.row-box` / `.host`） |
+| `src/pages/home/projection/projection.components.ts` | **一个文件里四个组件**（`ProjChildComponent` + 三个宿主），演示投影与兜底互斥 |
 | `src/pages/home/home.entry.ts` | `export { HomeComponent as default }` —— 页面入口 |
 | `src/pages/home/home.entry.json` | 页面配置（导航栏标题等） |
+
+节点查询那条链是 `viewChild` → `ElementRef.nativeElement`（库里的 `AgentNode`）
+→ `find()` → `boundingClientRect()` → `exec()`。**只有模板上写了 `#名字` 的元素**
+才有可查询 class，没写 `#` 的节点 `find()` 直接返 `null`；class 由节点路径算出，
+结构一变就作废，所以每次都要现调，不要把 class 串存下来。
+
+投影兜底那张卡里，**黄底是兜底**（子组件自己的模板），**蓝底是外部投影进来的**。
+三种组合应该长成：都不投 → 两条兜底；只投默认 → 蓝底 + 具名兜底；只投具名
+→ 默认兜底 + 蓝底。产物里是 `wx:if="{{nodeList[n].length}}"` / `wx:else`，
+两边同时出现或同时消失都是 bug。
+
+一个文件多组件时，产物按「**文件名-组件名**」拆，每个组件一份 wxml/wxss/js：
+`projection.components-ProjChildComponent.wxml` 等。入口名仍由文件名推导，
+所以 `usingComponents` 里引的是宿主组件那一份。样式也各归各的：小程序自定义
+组件样式默认隔离，兜底那段得写在子组件自己的 `styles` 里，投影进来的内容那么
+由宿主（首页）的 wxss 管。
 
 ### Demo 2：组件库一级 / 二级出口
 
@@ -149,7 +168,7 @@ references。漏了 references 就等于这个工程不在任何类型检查范�
 
 | 文件 | 作用 |
 | --- | --- |
-| `angular.json` → `build.options.polyfills` | `["@angular/localize"]`：构建器据此注入 `@angular/localize/init`，挂上全局 `$localize` |
+| `angular.json` → `build.options.polyfills` | `["@angular/localize/init"]`：挂上全局 `$localize`。**`/init` 必须写全**，构建器不做 `@angular/localize` → `/init` 的归一；裸写不报错，但 `loadTranslations` / `clearTranslations` 运行时会撞 `Cannot set properties of undefined (setting 'translate')` |
 | `tsconfig.app.json` → `compilerOptions.types` | 加 `@angular/localize/init`，让 `$localize` 在 TS 里有类型 |
 | `src/services/locale.ts` | 译文表 + `applyLocale` / `readStoredLocale`（`loadTranslations` / `clearTranslations`） |
 | `src/main.ts` | bootstrap **之前** `applyLocale(readStoredLocale())` |
@@ -306,6 +325,12 @@ grep -l "var StandaloneService"     dist/angular-miniprogram-template/*.js
 5. **TS 6.0**：`baseUrl` / `moduleResolution: node` 等被标废弃，
    `tsconfig.base.json` 里 `moduleResolution` 用 `bundler`（Angular 21 起
    core 的裸子路径导入需要 exports map）。
+6. **application builder 的 schema 是 `additionalProperties: false`**，webpack
+   时代那批键已经全部删掉：`index` / `scripts` / `vendorChunk` /
+   `buildOptimizer` / `extractLicenses` / `namedChunks`。留着不会警告，是直接
+   `Schema validation failed: Data path "" must NOT have additional
+   properties(xxx)`。选项清单以 `node_modules/angular-miniprogram/lib/config/schema.json`
+   为准，别拿旧模板的 `angular.json` 直接抄。
 
 ## 跑 `first` 库的测试
 
@@ -349,7 +374,8 @@ npm run test:wechat
 | `spec/i18n/i18n.spec.ts` | 运行时 i18n：静态消息、带插值的消息、ICU 的 select / plural 分支、`i18n-alt` 属性消息 |
 
 > i18n spec 能跑起来的前提是 `angular.json` 里 `first.test.options.polyfills`
-> 声明了 `@angular/localize`。不声明时 `$localize` 是 core 的恒等实现，ICU
+> 声明了 `@angular/localize/init`（**`/init` 必须写全**，构建器不做归一）。
+> 只写 `@angular/localize` 时 `$localize` 是 core 的恒等实现，ICU
 > 分支不解析，页面上直接登 `{VAR_SELECT, select, ...}` 原文 —— 构建一个字都不提。
 
 > **`select` 查询是可用的**：先 `ComponentFinderService.get(ngInstance)` 拿到
@@ -361,9 +387,12 @@ npm run test:wechat
 1. 在 `projects/first/src/spec/<名字>/` 下放三件套：
    `<名字>.entry.ts`（页面入口，`export default` 页面组件）、`<名字>.entry.json`、
    `<名字>.spec.ts`
-2. `angular.json` 的 `first.test.options.pages` 已经用 `**/*.entry.ts` 通配整个
+2. **`projects/first/app.json` 的 `pages` 要加一行**（产物路径，如
+   `pages/wxs-inline/wxs-inline-entry`）。glob 通配只帮你在 `angular.json` 那边
+   少写配置，页面清单不会替你补 —— 漏了就是 `reLaunch:fail page ... is not found`
+3. `angular.json` 的 `first.test.options.pages` 已经用 `**/*.entry.ts` 通配整个
    `src/spec`，加目录不用改配置
-3. `vitest.config.mts` 的 `test.include` 同样是 `**/*.spec.ts` 通配，不用动
+4. `vitest.config.mts` 的 `test.include` 同样是 `**/*.spec.ts` 通配，不用动
 
 builder 会自己扫 `sourceRoot` 下的 spec（日志里「发现 N 个 spec」那行就是它），
 漏了页面入口会直接报「没声明入口组件」，不会静默少跑。
